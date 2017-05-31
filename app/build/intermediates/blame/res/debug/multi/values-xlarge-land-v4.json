@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "E:\\Per\\code\\ytv\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-xlarge-land-v4\\values-xlarge-land-v4.xml",
+        "outputFile": "C:\\work\\0206\\watchme\\ytv\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-xlarge-land-v4\\values-xlarge-land-v4.xml",
         "map": [
             {
                 "to": {
@@ -11,31 +11,7 @@
                     "endOffset": 114
                 },
                 "from": {
-                    "file": "E:\\Per\\code\\ytv\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.0.0\\res\\values-xlarge-land\\values-xlarge-land.xml",
-                    "position": {
-                        "startLine": 4,
-                        "startColumn": 4,
-                        "startOffset": 284,
-                        "endColumn": 63,
-                        "endOffset": 343
-                    }
-                }
-            }
-        ]
-    },
-    {
-        "outputFile": "C:\\Users\\Rana\\Downloads\\Android-Youtube-LiveStream-master\\MainActivity\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-xlarge-land-v4\\values-xlarge-land-v4.xml",
-        "map": [
-            {
-                "to": {
-                    "startLine": 2,
-                    "startColumn": 4,
-                    "startOffset": 55,
-                    "endColumn": 63,
-                    "endOffset": 114
-                },
-                "from": {
-                    "file": "C:\\Users\\Rana\\Downloads\\Android-Youtube-LiveStream-master\\MainActivity\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.0.0\\res\\values-xlarge-land\\values-xlarge-land.xml",
+                    "file": "C:\\Users\\TOM\\.android\\build-cache\\2521ed5921fc59ee3f1900ddf16e2153acce3e19\\output\\res\\values-xlarge-land\\values-xlarge-land.xml",
                     "position": {
                         "startLine": 4,
                         "startColumn": 4,

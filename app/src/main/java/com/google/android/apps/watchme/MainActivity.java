@@ -55,6 +55,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import static android.Manifest.permission.GET_ACCOUNTS;
+import static android.Manifest.permission.RECORD_AUDIO;
+import static android.Manifest.permission.CAMERA;
 /**
  * @author Ibrahim Ulukaya <ulukaya@google.com>
  *         <p/>
@@ -69,14 +72,15 @@ public class MainActivity extends Activity implements
     private static final int REQUEST_ACCOUNT_PICKER = 2;
     private static final int REQUEST_AUTHORIZATION = 3;
     private static final int REQUEST_STREAMER = 4;
+    private static final int REQUEST_CONTACTS = 5;
     final HttpTransport transport = AndroidHttp.newCompatibleTransport();
     final JsonFactory jsonFactory = new GsonFactory();
     GoogleAccountCredential credential;
     private String mChosenAccountName;
     private ImageLoader mImageLoader;
     private EventsListFragment mEventsListFragment;
-    String[] PERMISSIONS = {Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO,
-            Manifest.permission.GET_ACCOUNTS, Manifest.permission.ACCESS_NETWORK_STATE};
+    String[] PERMISSIONS = {Manifest.permission.CAMERA, RECORD_AUDIO,
+            GET_ACCOUNTS, Manifest.permission.ACCESS_NETWORK_STATE};
     int PERMISSION_ALL = 1;
 
     @Override
@@ -84,7 +88,7 @@ public class MainActivity extends Activity implements
         getWindow().requestFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        takePicture();
         ensureLoader();
         if (!hasPermissions(this, PERMISSIONS)) {
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
@@ -451,5 +455,23 @@ public class MainActivity extends Activity implements
         protected void onPostExecute(Void param) {
             progressDialog.dismiss();
         }
+    }
+    private void takePicture() {
+        int permission = ActivityCompat.checkSelfPermission(this,
+                CAMERA);
+        int permission2 = ActivityCompat.checkSelfPermission(this,
+                RECORD_AUDIO);
+        int permission3 = ActivityCompat.checkSelfPermission(this,
+                GET_ACCOUNTS);
+
+        if (permission != PackageManager.PERMISSION_GRANTED||permission2 != PackageManager.PERMISSION_GRANTED || permission3 != PackageManager.PERMISSION_GRANTED ) {
+            //若尚未取得權限，則向使用者要求允許聯絡人讀取與寫入的權限，REQUEST_CONTACTS常數未宣告則請按下Alt+Enter自動定義常數值。
+            ActivityCompat.requestPermissions(this,
+                    new String[]{CAMERA,RECORD_AUDIO, GET_ACCOUNTS},
+                    REQUEST_CONTACTS);
+        } else {
+
+        }
+
     }
 }

@@ -1,10 +1,6 @@
 [
     {
-        "merged": "C:\\Users\\Rana\\Downloads\\Android-Youtube-LiveStream-master\\MainActivity\\app\\build\\intermediates\\res\\merged\\debug\\drawable-v23\\abc_control_background_material.xml",
-        "source": "C:\\Users\\Rana\\Downloads\\Android-Youtube-LiveStream-master\\MainActivity\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.0.0\\res\\drawable-v23\\abc_control_background_material.xml"
-    },
-    {
-        "merged": "E:\\Per\\code\\ytv\\app\\build\\intermediates\\res\\merged\\debug\\drawable-v23\\abc_control_background_material.xml",
-        "source": "E:\\Per\\code\\ytv\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.0.0\\res\\drawable-v23\\abc_control_background_material.xml"
+        "merged": "C:\\work\\0206\\watchme\\ytv\\app\\build\\intermediates\\res\\merged\\debug\\drawable-v23\\abc_control_background_material.xml",
+        "source": "C:\\Users\\TOM\\.android\\build-cache\\2521ed5921fc59ee3f1900ddf16e2153acce3e19\\output\\res\\drawable-v23\\abc_control_background_material.xml"
     }
 ]

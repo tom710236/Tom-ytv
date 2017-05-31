@@ -14,6 +14,8 @@
 
 package com.google.android.apps.watchme.util;
 
+import android.util.Log;
+
 import com.google.api.services.youtube.model.LiveBroadcast;
 
 /**
@@ -26,11 +28,15 @@ public class EventData {
     private String mIngestionAddress;
 
     public LiveBroadcast getEvent() {
+        //Log.e("getEvent()", String.valueOf(mEvent));
         return mEvent;
+
     }
 
     public void setEvent(LiveBroadcast event) {
+        Log.e("setEvent()", String.valueOf(event));
         mEvent = event;
+
     }
 
     public String getId() {
@@ -38,27 +44,36 @@ public class EventData {
     }
 
     public String getTitle() {
+        //Log.e("getTitle()",mEvent.getSnippet().getTitle());
         return mEvent.getSnippet().getTitle();
+
     }
 
     public String getThumbUri() {
         String url = mEvent.getSnippet().getThumbnails().getDefault().getUrl();
         // if protocol is not defined, pick https
+        //Log.e("url",url);
         if (url.startsWith("//")) {
             url = "https:" + url;
+            //Log.e("url2", String.valueOf(url));
         }
         return url;
+
     }
 
     public String getIngestionAddress() {
+        //Log.e("getIngestionAddress()",mIngestionAddress);
         return mIngestionAddress;
     }
 
     public void setIngestionAddress(String ingestionAddress) {
         mIngestionAddress = ingestionAddress;
+        //Log.e("setIngestionAddress", String.valueOf(mIngestionAddress));
     }
 
     public String getWatchUri() {
+        //Log.e("URI","http://www.youtube.com/watch?v=" + getId());
         return "http://www.youtube.com/watch?v=" + getId();
     }
+
 }

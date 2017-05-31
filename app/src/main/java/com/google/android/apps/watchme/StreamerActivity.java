@@ -14,252 +14,146 @@
 
 package com.google.android.apps.watchme;
 
-import android.Manifest;
 import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.hardware.Camera;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.os.PowerManager;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ToggleButton;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
-import com.google.android.apps.watchme.util.Utils;
+import com.github.faucamp.simplertmp.RtmpHandler;
 import com.google.android.apps.watchme.util.YouTubeApi;
+import com.seu.magicfilter.utils.MagicFilterType;
 
-import java.util.ArrayList;
-import java.util.List;
+import net.ossrs.yasea.SrsCameraView;
+import net.ossrs.yasea.SrsEncodeHandler;
+import net.ossrs.yasea.SrsPublisher;
+import net.ossrs.yasea.SrsRecordHandler;
+
+import java.io.IOException;
+import java.net.SocketException;
 
 /**
  * @author Ibrahim Ulukaya <ulukaya@google.com>
  *         <p/>
  *         StreamerActivity class which previews the camera and streams via StreamerService.
  */
-public class StreamerActivity extends Activity {
-    // CONSTANTS
-    // TODO: Stop hardcoding this and read values from the camera's supported sizes.
-    public static final int CAMERA_WIDTH = 640;
-    public static final int CAMERA_HEIGHT = 480;
-    private static final int REQUEST_CAMERA_MICROPHONE = 0;
+public class StreamerActivity extends Activity implements SrsEncodeHandler.SrsEncodeListener, RtmpHandler.RtmpListener, SrsRecordHandler.SrsRecordListener, View.OnClickListener {
+    private static final String TAG = "CameraActivity";
 
-    // Member variables
-    private StreamerService streamerService;
-    private PowerManager.WakeLock wakeLock;
-    private Preview preview;
+    private Button mPublishBtn;
+    private Button mCameraSwitchBtn;
+    private Button mEncoderBtn;
+    private Button mStop;
+    private EditText mRempUrlEt;
+    private SrsPublisher mPublisher;
     private String rtmpUrl;
-    private ServiceConnection streamerConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            Log.d(MainActivity.APP_NAME, "onServiceConnected");
-
-            streamerService = ((StreamerService.LocalBinder) service).getService();
-
-            restoreStateFromService();
-            startStreaming();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName className) {
-            Log.e(MainActivity.APP_NAME, "onServiceDisconnected");
-
-            // This should never happen, because our service runs in the same process.
-            streamerService = null;
-        }
-    };
     private String broadcastId;
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        Log.d(MainActivity.APP_NAME, "onCreate");
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        setContentView(R.layout.streamer);
 
+        mPublishBtn = (Button) findViewById(R.id.publish);
+        mCameraSwitchBtn = (Button) findViewById(R.id.swCam);
+        mEncoderBtn = (Button) findViewById(R.id.swEnc);
+        mStop = (Button)findViewById(R.id.endEvent);
+        mRempUrlEt = (EditText) findViewById(R.id.url);
+
+
+        mPublishBtn.setOnClickListener(this);
+        mCameraSwitchBtn.setOnClickListener(this);
+        mEncoderBtn.setOnClickListener(this);
+
+        mPublisher = new SrsPublisher((SrsCameraView) findViewById(R.id.glsurfaceview_camera));
+        //编码状态回调
+        mPublisher.setEncodeHandler(new SrsEncodeHandler(this));
+        mPublisher.setRecordHandler(new SrsRecordHandler(this));
+        //rtmp推流状态回调
+        mPublisher.setRtmpHandler(new RtmpHandler(this));
+        //预览分辨率
+        mPublisher.setPreviewResolution(1280, 720);
+        //推流分辨率
+        mPublisher.setOutputResolution(720,1280);
+        //传输率
+        mPublisher.setVideoHDMode();
+        //开启美颜（其他滤镜效果在MagicFilterType中查看）
+        mPublisher.switchCameraFilter(MagicFilterType.BEAUTY);
+        //打开摄像头，开始预览（未推流）
+        mPublisher.startCamera();
+
+        //
         broadcastId = getIntent().getStringExtra(YouTubeApi.BROADCAST_ID_KEY);
         //Log.v(MainActivity.APP_NAME, broadcastId);
 
         rtmpUrl = getIntent().getStringExtra(YouTubeApi.RTMP_URL_KEY);
+        Log.e("rtmpUrl",rtmpUrl);
 
-        if (rtmpUrl == null) {
-            Log.w(MainActivity.APP_NAME, "No RTMP URL was passed in; bailing.");
-            finish();
-        }
-        Log.i(MainActivity.APP_NAME, String.format("Got RTMP URL '%s' from calling activity.", rtmpUrl));
 
-        setContentView(R.layout.streamer);
-        preview = (Preview) findViewById(R.id.surfaceViewPreview);
 
-        if (!bindService(new Intent(this, StreamerService.class), streamerConnection,
-                BIND_AUTO_CREATE | BIND_DEBUG_UNBIND)) {
-            Log.e(MainActivity.APP_NAME, "Failed to bind StreamerService!");
-        }
 
-        final ToggleButton toggleButton = (ToggleButton) findViewById(R.id.toggleBroadcasting);
-        toggleButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (toggleButton.isChecked()) {
-                    streamerService.startStreaming(rtmpUrl);
-                } else {
-                    streamerService.stopStreaming();
-                }
-            }
-        });
     }
 
     @Override
-    protected void onResume() {
-        Log.d(MainActivity.APP_NAME, "onResume");
-
-        super.onResume();
-
-        if (streamerService != null) {
-            restoreStateFromService();
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        Log.d(MainActivity.APP_NAME, "onPause");
-
-        super.onPause();
-
-        if (preview != null) {
-            preview.setCamera(null);
-        }
-
-        if (streamerService != null) {
-            streamerService.releaseCamera();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        Log.d(MainActivity.APP_NAME, "onDestroy");
-
-        super.onDestroy();
-
-        if (streamerConnection != null) {
-            unbindService(streamerConnection);
-        }
-
-        stopStreaming();
-
-        if (streamerService != null) {
-            streamerService.releaseCamera();
-        }
-    }
-
-    private void restoreStateFromService() {
-        preview.setCamera(Utils.getCamera(Camera.CameraInfo.CAMERA_FACING_FRONT));
-    }
-
-    private void startStreaming() {
-        Log.d(MainActivity.APP_NAME, "startStreaming");
-
-        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        wakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, this.getClass().getName());
-        wakeLock.acquire();
-
-        if (!streamerService.isStreaming()) {
-            try {
-                String cameraPermission = Manifest.permission.CAMERA;
-                String microphonePermission = Manifest.permission.RECORD_AUDIO;
-                int hasCamPermission = checkSelfPermission(cameraPermission);
-                int hasMicPermission = checkSelfPermission(microphonePermission);
-                List<String> permissions = new ArrayList<String>();
-                if (hasCamPermission != PackageManager.PERMISSION_GRANTED) {
-                    permissions.add(cameraPermission);
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                            Manifest.permission.CAMERA)) {
-                        // Provide rationale in Snackbar to request permission
-                        Snackbar.make(preview, R.string.permission_camera_rationale,
-                                Snackbar.LENGTH_INDEFINITE).show();
-                    } else {
-                        // Explain in Snackbar to turn on permission in settings
-                        Snackbar.make(preview, R.string.permission_camera_explain,
-                                Snackbar.LENGTH_INDEFINITE).show();
+    public void onClick(View v) {
+        switch (v.getId()) {
+            //开始/停止推流
+            case R.id.publish:
+                if (mPublishBtn.getText().toString().contentEquals("開始")) {
+                    //rtmpUrl = mRempUrlEt.getText().toString();
+                    if (TextUtils.isEmpty(rtmpUrl)) {
+                        Toast.makeText(getApplicationContext(), "地址不能為空！", Toast.LENGTH_SHORT).show();
                     }
-                }
-                if (hasMicPermission != PackageManager.PERMISSION_GRANTED) {
-                    permissions.add(microphonePermission);
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                            Manifest.permission.RECORD_AUDIO)) {
-                        // Provide rationale in Snackbar to request permission
-                        Snackbar.make(preview, R.string.permission_microphone_rationale,
-                                Snackbar.LENGTH_INDEFINITE).show();
+                    mPublisher.startPublish(rtmpUrl);
+                    mPublisher.startCamera();
+
+                    if (mEncoderBtn.getText().toString().contentEquals("軟編碼")) {
+                        Toast.makeText(getApplicationContext(), "當前使用硬編碼", Toast.LENGTH_SHORT).show();
                     } else {
-                        // Explain in Snackbar to turn on permission in settings
-                        Snackbar.make(preview, R.string.permission_microphone_explain,
-                                Snackbar.LENGTH_INDEFINITE).show();
+                        Toast.makeText(getApplicationContext(), "當前使用軟編碼", Toast.LENGTH_SHORT).show();
                     }
-                }
-                if (!permissions.isEmpty()) {
-                    String[] params = permissions.toArray(new String[permissions.size()]);
-                    ActivityCompat.requestPermissions(this, params, REQUEST_CAMERA_MICROPHONE);
-                } else {
-                    // We already have permission, so handle as normal
-                    streamerService.startStreaming(rtmpUrl);
-                }
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CAMERA_MICROPHONE: {
-                Log.i(MainActivity.APP_NAME, "Received response for camera with mic permissions request.");
-
-                // We have requested multiple permissions for contacts, so all of them need to be
-                // checked.
-                if (Utils.verifyPermissions(grantResults)) {
-                    // permissions were granted, yay! do the
-                    // streamer task you need to do.
-                    streamerService.startStreaming(rtmpUrl);
-                } else {
-                    Log.i(MainActivity.APP_NAME, "Camera with mic permissions were NOT granted.");
-                    Snackbar.make(preview, R.string.permissions_not_granted,
-                            Snackbar.LENGTH_SHORT)
-                            .show();
+                    mPublishBtn.setText("停止");
+                    mEncoderBtn.setEnabled(false);
+                } else if (mPublishBtn.getText().toString().contentEquals("停止")) {
+                    mPublisher.stopPublish();
+                    mPublisher.stopRecord();
+                    mPublishBtn.setText("開始");
+                    mEncoderBtn.setEnabled(true);
                 }
                 break;
-            }
+            //切换摄像头
+            case R.id.swCam:
+                mPublisher.switchCameraFace((mPublisher.getCamraId() + 1) % Camera.getNumberOfCameras());
+                break;
+            //切换编码方式
+            case R.id.swEnc:
+                if (mEncoderBtn.getText().toString().contentEquals("軟編碼")) {
+                    mPublisher.switchToSoftEncoder();
+                    mEncoderBtn.setText("硬編碼");
 
-            // other 'switch' lines to check for other
-            // permissions this app might request
+
+
+                } else if (mEncoderBtn.getText().toString().contentEquals("硬編碼")) {
+                    mPublisher.switchToHardEncoder();
+                    mEncoderBtn.setText("軟編碼");
+                }
+                break;
+
         }
-        return;
+
     }
+    public void onStop (View v){
+        mPublisher.stopPublish();
+        mPublisher.stopRecord();
 
-
-    private void stopStreaming() {
-        Log.d(MainActivity.APP_NAME, "stopStreaming");
-
-        if (wakeLock != null) {
-            wakeLock.release();
-            wakeLock = null;
-        }
-
-        if (streamerService.isStreaming()) {
-            streamerService.stopStreaming();
-        }
-    }
-
-    public void endEvent(View view) {
         Intent data = new Intent();
         data.putExtra(YouTubeApi.BROADCAST_ID_KEY, broadcastId);
         if (getParent() == null) {
@@ -268,6 +162,158 @@ public class StreamerActivity extends Activity {
             getParent().setResult(Activity.RESULT_OK, data);
         }
         finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPublisher.resumeRecord();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mPublisher.pauseRecord();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPublisher.stopPublish();
+        mPublisher.stopRecord();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mPublisher.stopEncode();
+        mPublisher.stopRecord();
+        mPublisher.setScreenOrientation(newConfig.orientation);
+        if (mPublishBtn.getText().toString().contentEquals("停止")) {
+            mPublisher.startEncode();
+        }
+        mPublisher.startCamera();
+    }
+
+    @Override
+    public void onNetworkWeak() {
+        Toast.makeText(getApplicationContext(), "網路訊號弱", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onNetworkResume() {
+
+    }
+
+    @Override
+    public void onEncodeIllegalArgumentException(IllegalArgumentException e) {
+        handleException(e);
+    }
+
+    private void handleException(Exception e) {
+        try {
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            mPublisher.stopPublish();
+            mPublisher.stopRecord();
+            mPublishBtn.setText("開始");
+        } catch (Exception e1) {
+            //
+        }
+    }
+
+    @Override
+    public void onRtmpConnecting(String msg) {
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRtmpConnected(String msg) {
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRtmpVideoStreaming() {
+
+    }
+
+    @Override
+    public void onRtmpAudioStreaming() {
+
+    }
+
+    @Override
+    public void onRtmpStopped() {
+        Toast.makeText(getApplicationContext(), "已停止", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRtmpDisconnected() {
+        Toast.makeText(getApplicationContext(), "未連接伺服器", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRtmpVideoFpsChanged(double fps) {
+
+    }
+
+    @Override
+    public void onRtmpVideoBitrateChanged(double bitrate) {
+
+    }
+
+    @Override
+    public void onRtmpAudioBitrateChanged(double bitrate) {
+
+    }
+
+    @Override
+    public void onRtmpSocketException(SocketException e) {
+        handleException(e);
+    }
+
+    @Override
+    public void onRtmpIOException(IOException e) {
+        handleException(e);
+    }
+
+    @Override
+    public void onRtmpIllegalArgumentException(IllegalArgumentException e) {
+        handleException(e);
+    }
+
+    @Override
+    public void onRtmpIllegalStateException(IllegalStateException e) {
+        handleException(e);
+    }
+
+    @Override
+    public void onRecordPause() {
+        Toast.makeText(getApplicationContext(), "Record paused", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRecordResume() {
+        Toast.makeText(getApplicationContext(), "Record resumed", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRecordStarted(String msg) {
+        Toast.makeText(getApplicationContext(), "Recording file: " + msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRecordFinished(String msg) {
+        Toast.makeText(getApplicationContext(), "MP4 file saved: " + msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRecordIOException(IOException e) {
+        handleException(e);
+    }
+
+    @Override
+    public void onRecordIllegalArgumentException(IllegalArgumentException e) {
+        handleException(e);
     }
 
 }

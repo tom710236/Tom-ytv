@@ -19,7 +19,7 @@ package com.google.android.apps.watchme;
  *         <p/>
  *         FFmpeg class which loads ffmpeg library and exposes its methods.
  */
-public class Ffmpeg {
+public class Ffmpeg  {
 
 
     static {

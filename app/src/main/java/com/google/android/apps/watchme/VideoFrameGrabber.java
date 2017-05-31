@@ -42,7 +42,7 @@ public class VideoFrameGrabber {
         this.camera = camera;
 
         Camera.Parameters params = camera.getParameters();
-        params.setPreviewSize(StreamerActivity.CAMERA_WIDTH, StreamerActivity.CAMERA_HEIGHT);
+        //params.setPreviewSize(StreamerActivity.CAMERA_WIDTH, StreamerActivity.CAMERA_HEIGHT);
         camera.setParameters(params);
 
         Size previewSize = params.getPreviewSize();

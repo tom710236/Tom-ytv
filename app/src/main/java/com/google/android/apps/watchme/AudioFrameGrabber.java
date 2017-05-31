@@ -61,7 +61,8 @@ public class AudioFrameGrabber {
         Log.d(MainActivity.APP_NAME, "recordThread");
 
         int audioEncoding = AudioFormat.ENCODING_PCM_16BIT;
-        int channelConfiguration = AudioFormat.CHANNEL_IN_STEREO;
+        //
+        int channelConfiguration = AudioFormat.CHANNEL_CONFIGURATION_MONO;
         int bufferSize = AudioRecord.getMinBufferSize(frequency, channelConfiguration, audioEncoding);
         Log.i(MainActivity.APP_NAME, "AudioRecord buffer size: " + bufferSize);
 

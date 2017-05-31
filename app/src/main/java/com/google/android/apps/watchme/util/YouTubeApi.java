@@ -46,14 +46,18 @@ public class YouTubeApi {
     public static final String BROADCAST_ID_KEY = "1qc7-8z7g-9bvr-3kh4";
     private static final int FUTURE_DATE_OFFSET_MILLIS = 5 * 1000;
 
+    //建立直播活動
     public static void createLiveEvent(YouTube youtube, String description,
                                        String name) {
         // We need a date that's in the proper ISO format and is in the future,
         // since the API won't
         // create events that start in the past.
+
+        //設定建立活動時間
         SimpleDateFormat dateFormat = new SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss'Z'");
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        //時區
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Taipei"));
         long futureDateMillis = System.currentTimeMillis()
                 + FUTURE_DATE_OFFSET_MILLIS;
         Date futureDate = new Date();
@@ -65,42 +69,54 @@ public class YouTubeApi {
                 name, description, date));
 
         try {
-
+            //LiveBroadcastSnippet 這是Java數據模型類，它指定在使用YouTube數據API時如何解析/序列化為通過HTTP傳輸的JSON
             LiveBroadcastSnippet broadcastSnippet = new LiveBroadcastSnippet();
+            //活動標題
             broadcastSnippet.setTitle(name);
+            //活動預定結束的日期和時間
             broadcastSnippet.setScheduledStartTime(new DateTime(futureDate));
 
             LiveBroadcastContentDetails contentDetails = new LiveBroadcastContentDetails();
             MonitorStreamInfo monitorStream = new MonitorStreamInfo();
+            //該值確定監視流是否為廣播啟用
             monitorStream.setEnableMonitorStream(false);
+            //monitorStream對象包含有關監視流的信息，播放器可以在廣播流公開顯示之前用於查看事件內容。
             contentDetails.setMonitorStream(monitorStream);
 
             // Create LiveBroadcastStatus with privacy status.
             LiveBroadcastStatus status = new LiveBroadcastStatus();
-            status.setPrivacyStatus("unlisted");
-
+            //廣播的隱私狀態。"unlisted" 非公開 "public" 公開
+            status.setPrivacyStatus("public");
+            //一個liveBroadcast資源表示將進行流，通過實時視頻，在YouTube上的事件。
             LiveBroadcast broadcast = new LiveBroadcast();
             broadcast.setKind("youtube#liveBroadcast");
+            //包含有關活動的基本詳細信息。
             broadcast.setSnippet(broadcastSnippet);
+            //包含有關活動的基本詳細信息。
             broadcast.setStatus(status);
+            //包含有關活動的基本詳細信息。
             broadcast.setContentDetails(contentDetails);
 
             // Create the insert request
+            // 創建插入請求
             YouTube.LiveBroadcasts.Insert liveBroadcastInsert = youtube
                     .liveBroadcasts().insert("snippet,status,contentDetails",
                             broadcast);
 
             // Request is executed and inserted broadcast is returned
+            // 要求執行，並返回插入的廣播
             LiveBroadcast returnedBroadcast = liveBroadcastInsert.execute();
 
             // Create a snippet with title.
+            // 創建一個帶標題的片段
             LiveStreamSnippet streamSnippet = new LiveStreamSnippet();
             streamSnippet.setTitle(name);
 
             // Create content distribution network with format and ingestion
+            // 創建具有格式和攝取的內容分發網絡
             // type.
             CdnSettings cdn = new CdnSettings();
-            cdn.setFormat("240p");
+            cdn.setFormat("720p");
             cdn.setIngestionType("rtmp");
 
             LiveStream stream = new LiveStream();
@@ -116,11 +132,12 @@ public class YouTubeApi {
             LiveStream returnedStream = liveStreamInsert.execute();
 
             // Create the bind request
+            // 創建綁定請求
             YouTube.LiveBroadcasts.Bind liveBroadcastBind = youtube
                     .liveBroadcasts().bind(returnedBroadcast.getId(),
                             "id,contentDetails");
 
-            // Set stream id to bind
+            // 設置要綁定的流ID
             liveBroadcastBind.setStreamId(returnedStream.getId());
 
             // Request is executed and bound broadcast is returned
@@ -142,6 +159,7 @@ public class YouTubeApi {
     }
 
     // TODO: Catch those exceptions and handle them here.
+    // 異常處理
     public static List<EventData> getLiveEvents(
             YouTube youtube) throws IOException {
         Log.i(MainActivity.APP_NAME, "Requesting live events.");
@@ -172,7 +190,7 @@ public class YouTubeApi {
         }
         return resultList;
     }
-
+    //事件開始
     public static void startEvent(YouTube youtube, String broadcastId)
             throws IOException {
 
@@ -181,9 +199,10 @@ public class YouTubeApi {
         } catch (InterruptedException e) {
             Log.e(MainActivity.APP_NAME, "", e);
         }
-
+        // 更改YouTube直播的狀態，並啟動與新狀態相關聯的任何進程
         Transition transitionRequest = youtube.liveBroadcasts().transition(
                 "live", broadcastId, "status");
+        // 執行
         transitionRequest.execute();
     }
 
@@ -193,7 +212,7 @@ public class YouTubeApi {
                 "complete", broadcastId, "status");
         transitionRequest.execute();
     }
-
+    //得到擷取的地址
     public static String getIngestionAddress(YouTube youtube, String streamId)
             throws IOException {
         YouTube.LiveStreams.List liveStreamRequest = youtube.liveStreams()

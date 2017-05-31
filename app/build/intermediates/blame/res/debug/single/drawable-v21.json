@@ -1,18 +1,18 @@
 [
     {
-        "merged": "C:\\Users\\Rana\\Downloads\\Android-Youtube-LiveStream-master\\MainActivity\\app\\build\\intermediates\\res\\merged\\debug\\drawable-v21\\abc_action_bar_item_background_material.xml",
-        "source": "C:\\Users\\Rana\\Downloads\\Android-Youtube-LiveStream-master\\MainActivity\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.0.0\\res\\drawable-v21\\abc_action_bar_item_background_material.xml"
+        "merged": "C:\\work\\0206\\watchme\\ytv\\app\\build\\intermediates\\res\\merged\\debug\\drawable-v21\\abc_action_bar_item_background_material.xml",
+        "source": "C:\\Users\\TOM\\.android\\build-cache\\2521ed5921fc59ee3f1900ddf16e2153acce3e19\\output\\res\\drawable-v21\\abc_action_bar_item_background_material.xml"
     },
     {
-        "merged": "E:\\Per\\code\\ytv\\app\\build\\intermediates\\res\\merged\\debug\\drawable-v21\\abc_action_bar_item_background_material.xml",
-        "source": "E:\\Per\\code\\ytv\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.0.0\\res\\drawable-v21\\abc_action_bar_item_background_material.xml"
+        "merged": "C:\\work\\0206\\watchme\\ytv\\app\\build\\intermediates\\res\\merged\\debug\\drawable-v21\\abc_btn_colored_material.xml",
+        "source": "C:\\Users\\TOM\\.android\\build-cache\\2521ed5921fc59ee3f1900ddf16e2153acce3e19\\output\\res\\drawable-v21\\abc_btn_colored_material.xml"
     },
     {
-        "merged": "E:\\Per\\code\\ytv\\app\\build\\intermediates\\res\\merged\\debug\\drawable-v21\\abc_btn_colored_material.xml",
-        "source": "E:\\Per\\code\\ytv\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.0.0\\res\\drawable-v21\\abc_btn_colored_material.xml"
+        "merged": "C:\\work\\0206\\watchme\\ytv\\app\\build\\intermediates\\res\\merged\\debug\\drawable-v21\\notification_action_background.xml",
+        "source": "C:\\Users\\TOM\\.android\\build-cache\\b5b6c98d096b176f0a130d5c86f0c3ae759ce525\\output\\res\\drawable-v21\\notification_action_background.xml"
     },
     {
-        "merged": "C:\\Users\\Rana\\Downloads\\Android-Youtube-LiveStream-master\\MainActivity\\app\\build\\intermediates\\res\\merged\\debug\\drawable-v21\\abc_btn_colored_material.xml",
-        "source": "C:\\Users\\Rana\\Downloads\\Android-Youtube-LiveStream-master\\MainActivity\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.0.0\\res\\drawable-v21\\abc_btn_colored_material.xml"
+        "merged": "C:\\work\\0206\\watchme\\ytv\\app\\build\\intermediates\\res\\merged\\debug\\drawable-v21\\abc_edit_text_material.xml",
+        "source": "C:\\Users\\TOM\\.android\\build-cache\\b5b6c98d096b176f0a130d5c86f0c3ae759ce525\\output\\res\\drawable-v21\\abc_edit_text_material.xml"
     }
 ]

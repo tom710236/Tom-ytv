@@ -1,42 +1,22 @@
 [
     {
-        "merged": "C:\\Users\\Rana\\Downloads\\Android-Youtube-LiveStream-master\\MainActivity\\app\\build\\intermediates\\res\\merged\\debug\\drawable-tvdpi\\ic_plusone_medium_off_client.png",
-        "source": "C:\\Users\\Rana\\Downloads\\Android-Youtube-LiveStream-master\\MainActivity\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-plus\\7.8.0\\res\\drawable-tvdpi\\ic_plusone_medium_off_client.png"
+        "merged": "C:\\work\\0206\\watchme\\ytv\\app\\build\\intermediates\\res\\merged\\debug\\drawable-tvdpi\\common_full_open_on_phone.png",
+        "source": "C:\\Users\\TOM\\.android\\build-cache\\d1bef6bf563f0a31080081311050aa8cf10908b9\\output\\res\\drawable-tvdpi\\common_full_open_on_phone.png"
     },
     {
-        "merged": "C:\\Users\\Rana\\Downloads\\Android-Youtube-LiveStream-master\\MainActivity\\app\\build\\intermediates\\res\\merged\\debug\\drawable-tvdpi\\common_full_open_on_phone.png",
-        "source": "C:\\Users\\Rana\\Downloads\\Android-Youtube-LiveStream-master\\MainActivity\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\7.8.0\\res\\drawable-tvdpi\\common_full_open_on_phone.png"
+        "merged": "C:\\work\\0206\\watchme\\ytv\\app\\build\\intermediates\\res\\merged\\debug\\drawable-tvdpi\\ic_plusone_medium_off_client.png",
+        "source": "C:\\Users\\TOM\\.android\\build-cache\\78f9bdd5c51b46e636bdda238b246d3b2d76bc5c\\output\\res\\drawable-tvdpi\\ic_plusone_medium_off_client.png"
     },
     {
-        "merged": "E:\\Per\\code\\ytv\\app\\build\\intermediates\\res\\merged\\debug\\drawable-tvdpi\\ic_plusone_small_off_client.png",
-        "source": "E:\\Per\\code\\ytv\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-plus\\7.8.0\\res\\drawable-tvdpi\\ic_plusone_small_off_client.png"
+        "merged": "C:\\work\\0206\\watchme\\ytv\\app\\build\\intermediates\\res\\merged\\debug\\drawable-tvdpi\\ic_plusone_small_off_client.png",
+        "source": "C:\\Users\\TOM\\.android\\build-cache\\78f9bdd5c51b46e636bdda238b246d3b2d76bc5c\\output\\res\\drawable-tvdpi\\ic_plusone_small_off_client.png"
     },
     {
-        "merged": "E:\\Per\\code\\ytv\\app\\build\\intermediates\\res\\merged\\debug\\drawable-tvdpi\\ic_plusone_medium_off_client.png",
-        "source": "E:\\Per\\code\\ytv\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-plus\\7.8.0\\res\\drawable-tvdpi\\ic_plusone_medium_off_client.png"
+        "merged": "C:\\work\\0206\\watchme\\ytv\\app\\build\\intermediates\\res\\merged\\debug\\drawable-tvdpi\\ic_plusone_standard_off_client.png",
+        "source": "C:\\Users\\TOM\\.android\\build-cache\\78f9bdd5c51b46e636bdda238b246d3b2d76bc5c\\output\\res\\drawable-tvdpi\\ic_plusone_standard_off_client.png"
     },
     {
-        "merged": "E:\\Per\\code\\ytv\\app\\build\\intermediates\\res\\merged\\debug\\drawable-tvdpi\\ic_plusone_standard_off_client.png",
-        "source": "E:\\Per\\code\\ytv\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-plus\\7.8.0\\res\\drawable-tvdpi\\ic_plusone_standard_off_client.png"
-    },
-    {
-        "merged": "C:\\Users\\Rana\\Downloads\\Android-Youtube-LiveStream-master\\MainActivity\\app\\build\\intermediates\\res\\merged\\debug\\drawable-tvdpi\\ic_plusone_standard_off_client.png",
-        "source": "C:\\Users\\Rana\\Downloads\\Android-Youtube-LiveStream-master\\MainActivity\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-plus\\7.8.0\\res\\drawable-tvdpi\\ic_plusone_standard_off_client.png"
-    },
-    {
-        "merged": "E:\\Per\\code\\ytv\\app\\build\\intermediates\\res\\merged\\debug\\drawable-tvdpi\\ic_plusone_tall_off_client.png",
-        "source": "E:\\Per\\code\\ytv\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-plus\\7.8.0\\res\\drawable-tvdpi\\ic_plusone_tall_off_client.png"
-    },
-    {
-        "merged": "E:\\Per\\code\\ytv\\app\\build\\intermediates\\res\\merged\\debug\\drawable-tvdpi\\common_full_open_on_phone.png",
-        "source": "E:\\Per\\code\\ytv\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\7.8.0\\res\\drawable-tvdpi\\common_full_open_on_phone.png"
-    },
-    {
-        "merged": "C:\\Users\\Rana\\Downloads\\Android-Youtube-LiveStream-master\\MainActivity\\app\\build\\intermediates\\res\\merged\\debug\\drawable-tvdpi\\ic_plusone_tall_off_client.png",
-        "source": "C:\\Users\\Rana\\Downloads\\Android-Youtube-LiveStream-master\\MainActivity\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-plus\\7.8.0\\res\\drawable-tvdpi\\ic_plusone_tall_off_client.png"
-    },
-    {
-        "merged": "C:\\Users\\Rana\\Downloads\\Android-Youtube-LiveStream-master\\MainActivity\\app\\build\\intermediates\\res\\merged\\debug\\drawable-tvdpi\\ic_plusone_small_off_client.png",
-        "source": "C:\\Users\\Rana\\Downloads\\Android-Youtube-LiveStream-master\\MainActivity\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-plus\\7.8.0\\res\\drawable-tvdpi\\ic_plusone_small_off_client.png"
+        "merged": "C:\\work\\0206\\watchme\\ytv\\app\\build\\intermediates\\res\\merged\\debug\\drawable-tvdpi\\ic_plusone_tall_off_client.png",
+        "source": "C:\\Users\\TOM\\.android\\build-cache\\78f9bdd5c51b46e636bdda238b246d3b2d76bc5c\\output\\res\\drawable-tvdpi\\ic_plusone_tall_off_client.png"
     }
 ]

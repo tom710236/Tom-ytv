@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="E:\Per\code\ytv\app\src\main\jniLibs"><file name="armeabi-v7a/libffmpeg.so" path="E:\Per\code\ytv\app\src\main\jniLibs\armeabi-v7a\libffmpeg.so"/></source></dataSet><dataSet config="debug"><source path="E:\Per\code\ytv\app\src\debug\jniLibs"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="C:\work\0206\watchme\ytv\app\src\main\jniLibs"/></dataSet><dataSet config="debug"><source path="C:\work\0206\watchme\ytv\app\src\debug\jniLibs"/></dataSet></merger>
